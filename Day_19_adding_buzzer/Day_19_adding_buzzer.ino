@@ -141,7 +141,8 @@ void loop() {
   // Depth from the previous loop, initialized to our initial depth first time
   // through the loop().  When changed it retains it's value between loop executions.
   static int previous_depth = INITIAL_DEPTH;  // Depth from our previous loop(),
- 
+
+
   if (depth_control.get_change()) {  // If the depth control value has changed since last check
     // The rotary encoder library always sets the initial counter to 0, so we will always
     // add our initial depth to the counter to properly track our current depth.
@@ -159,16 +160,17 @@ void loop() {
     int rise_rate = current_depth - previous_depth;
     if (rise_rate > 1) {
       tone(BUZZER_PIN, 80, LOOP_DELAY);
-      displayColor(128, 50); 
+      displayColor(50, 128); 
     }
- 
     // We cannot go deeper than the sea floor where the lander sits, so reset the counter
     // if the user tries to go deeper than our initial depth.
-    if (current_depth < INITIAL_DEPTH) {
+    else if (current_depth < INITIAL_DEPTH) {
       current_depth = INITIAL_DEPTH;
       depth_control.reset();
     }
- 
+   if (current_depth < 0) {
+    displayColor(255, 0);
+    }
     // Display our current depth on our digital depth gauge
     depth_gauge.showNumberDec(current_depth);
  
@@ -192,7 +194,7 @@ void loop() {
     // We have reached the surface!  Blink "dOnE" on our depth gauge and play a
     // happy completion tone.
     if (current_depth >= SURFACE_DEPTH) {
-      displayColor(128, 5); 
+      displayColor(0, 255); 
       // Play 'tada!' tune on our buzzer.
       tone(BUZZER_PIN, 440, LOOP_DELAY);
       delay(LOOP_DELAY);
